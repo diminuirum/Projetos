@@ -1,0 +1,399 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background-image: url("img/fundo\ traducao.png");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+
+.caixa-maior {
+    background: linear-gradient(145deg,
+            #1c1b1b,
+            #121111);
+    width: 450px;
+    max-width: 100%;
+    border-radius: 25px;
+    padding: 20px;
+
+    box-shadow:
+        0 15px 40px rgba(0, 0, 0, 0.8),
+        inset 0 0 15px rgba(53, 53, 53, 0.5);
+
+    border: 1px solid rgba(70, 70, 70, 0.5);
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+.caixa-maior:hover {
+    transform: translateY(-6px);
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.09),
+        inset 0 0 20px rgba(82, 79, 79, 0.5);
+}
+
+
+.input-texto {
+    width: 100%;
+    height: 100px;
+    border: none;
+    outline: none;
+    background: linear-gradient(145deg,
+            #242323,
+            #1a1919);
+
+    border-radius: 18px;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 15px;
+    resize: none;
+
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.06),
+        0 8px 20px rgba(0, 0, 0, 0.5);
+
+    transition:
+        border 0.3s ease,
+        box-shadow 0.3s ease,
+        transform 0.2s ease;
+}
+
+.input-texto:focus {
+    border: 1px solid rgba(138, 43, 226, 0.7);
+
+    box-shadow:
+        inset 0 0 10px rgba(0, 0, 0, 0.6);
+
+    transform: scale(1.01);
+}
+
+.idioma {
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+    outline: none;
+    padding: 10px;
+    background-color: #302f2f;
+    color: #ffffff;
+    cursor: pointer;
+
+
+    transition:
+        transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-color 0.3s ease;
+}
+
+.idioma:hover {
+    transform: scale(1.05);
+    background-color: #3a3838;
+    box-shadow: 0 0 12px rgba(132, 43, 226, 06);
+}
+
+.idioma:active {
+    transform: scale(0.98);
+
+}
+
+.animar-idioma {
+    animation: pulseIdioma 0.4s ease;
+}
+
+#btnGravar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#btnGravar img {
+    width: 26px;
+}
+
+#btnGravar.mic {
+    background-color: #494646;
+}
+
+#btnGravar.ouvindo {
+    background-color: #7a1f1f;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+    animation: pulseMic 1s infinite;
+}
+
+@keyframes pulseIdioma {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.08);
+    }
+
+    100% {
+        transform: scale(1)
+    }
+}
+
+button {
+    border: none;
+    padding: 10px;
+    background-color: #494646;
+    border-radius: 50%;
+    cursor: pointer;
+
+    /* Transição suave pra animações */
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hover - quando passa o mouse em cima */
+button:hover {
+    transform: scale(1.3);
+    /* aumenta levemente */
+    background-color: #6a0dad;
+    /* cor roxa mais chamativa */
+    box-shadow: 0 4px 15px rgba(138, 45, 226, 0.5);
+    /* glow roxo */
+}
+
+/* Active - quando clica */
+button:active {
+    transform: scale(0.90);
+    /* encolhe levemente pra efeito de clique */
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.3);
+    /* sombra menor */
+}
+
+.controle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.resultado {
+    width: 100%;
+    padding: 15px;
+    border-radius: 15px;
+
+    background: linear-gradient(145deg,
+            #1f1e1e,
+            #151414);
+
+    box-shadow:
+        inset 0 0 12px rgba(0, 0, 0, 0.6),
+        0 10px 25px rgba(0, 0, 0, 0.6);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.titulo-traducao {
+    color: #ffffff;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.traducao {
+    width: 100%;
+    max-width: 600px;
+    display: block;
+    overflow: hidden;
+    background-color: transparent;
+    color: #ffffff;
+    font-size: 18px;
+    line-height: 1.5;
+    border: none;
+    outline: none;
+}
+
+/* ============ RESPONSIVO PARA CELULAR ============ */
+
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100vh;
+        padding: 10px;
+    }
+
+    .caixa-maior {
+        width: 100%;
+        max-width: 100%;
+        padding: 15px;
+        border-radius: 20px;
+    }
+
+    .input-texto {
+        height: 80px;
+        font-size: 14px;
+        padding: 12px;
+        border-radius: 15px;
+    }
+
+    .idioma {
+        padding: 8px;
+        font-size: 14px;
+        border-radius: 15px;
+    }
+
+    button {
+        padding: 8px;
+        border-radius: 40%;
+    }
+
+    #btnGravar {
+        width: 45px;
+        height: 45px;
+    }
+
+    #btnGravar img {
+        width: 22px;
+    }
+
+    .controle {
+        gap: 8px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+    }
+
+    .resultado {
+        padding: 12px;
+        border-radius: 12px;
+    }
+
+    .titulo-traducao {
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .traducao {
+        font-size: 16px;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    * {
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        padding: 5px;
+    }
+
+    .caixa-maior {
+        width: 100%;
+        padding: 12px;
+        border-radius: 16px;
+        box-shadow:
+            0 10px 30px rgba(0, 0, 0, 0.7),
+            inset 0 0 10px rgba(53, 53, 53, 0.4);
+    }
+
+    .caixa-maior:hover {
+        transform: translateY(-3px);
+    }
+
+    .input-texto {
+        height: 70px;
+        font-size: 13px;
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .idioma {
+        padding: 7px 8px;
+        font-size: 12px;
+        border-radius: 12px;
+        flex-grow: 1;
+    }
+
+    button {
+        padding: 7px;
+    }
+
+    #btnGravar {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+    }
+
+    #btnGravar img {
+        width: 20px;
+    }
+
+    .controle {
+        gap: 6px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+    }
+
+    .resultado {
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .titulo-traducao {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+
+    .traducao {
+        font-size: 14px;
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 320px) {
+    .caixa-maior {
+        padding: 10px;
+    }
+
+    .input-texto {
+        height: 60px;
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .idioma {
+        padding: 6px;
+        font-size: 11px;
+    }
+
+    #btnGravar {
+        width: 38px;
+        height: 38px;
+    }
+
+    #btnGravar img {
+        width: 18px;
+    }
+
+    button {
+        padding: 6px;
+    }
+
+    .controle {
+        gap: 4px;
+    }
+}
