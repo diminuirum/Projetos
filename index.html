@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="styles.css">
     <title>Traduza com IA</title>
@@ -17,7 +17,8 @@
 
         <div class="controle">
 
-            <select class="idioma">
+            <select class="idioma-origem">
+                <option value="pt">Português</option>
                 <option value="en">Inglês</option>
                 <option value="de">Alemão</option>
                 <option value="es">Espanhol</option>
@@ -29,10 +30,22 @@
             <button onclick="traduzir()">
                 <img src="img/traduzir.svg">
             </button>
+ 
+            <button id="btnCopiar">📋</button>
 
             <button id="btnGravar">
-                <img src="img/microfone.svg" alt="microfone">
+                <img src="img/microfone.svg" alt="Gravar áudio">
             </button>
+
+            <select class="idioma-destino">
+                <option value="pt">Português</option>
+                <option value="en">Inglês</option>
+                <option value="de">Alemão</option>
+                <option value="es">Espanhol</option>
+                <option value="fr">Francês</option>
+                <option value="it">Italiano</option>
+                <option value="zh-CN">Mandarim</option>
+            </select>
 
         </div>
 

@@ -3,11 +3,26 @@ document.addEventListener("DOMContentLoaded", () => {
     let inputTexto = document.querySelector(".input-texto"); // seleciona o primeiro elemento com essa classe
     let outputTexto = document.querySelector(".traducao");
     let btnGravar = document.getElementById("btnGravar"); // seleciona elemento pelo id
-    let selectIdioma = document.querySelector(".idioma");
+    let selectOrigem = document.querySelector(".idioma-origem");
+    let selectDestino = document.querySelector(".idioma-destino");
+    let btnAlternar = document.querySelector(".btnAlternar");
+    let recognition = null;
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
     let ouvindo = false;
     let timerSilencio = null;
     const tempoSilencio = 1500; // 1.5 segundos de silêncio
-    
+
+
+    // Inicializar reconhecimento de voz apenas se disponível
+    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+        recognition = new SpeechRecognition()
+        recognition.lang = "pt-BR"
+        // iOS não suporta bem continuous = true
+        recognition.continuous = !isSafari
+        recognition.interimResults = false
+    }
 
     function escreverDevagar(texto, velocidade = 25) {
         outputTexto.value = "";
@@ -23,32 +38,47 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }, velocidade);
     }
+
     function ajustarAlturaTraducao() {
         outputTexto.style.height = "auto"
         outputTexto.style.height = outputTexto.scrollHeight + "px";
     }
-    selectIdioma.addEventListener("change", () => {
-        selectIdioma.classList.add("animar-idioma");
+
+    function alternarIdiomas() {
+        const tempIdioma = selectOrigem.value;
+        selectOrigem.value = selectDestino.value;
+        selectDestino.value = selectDestino.value;
+
+        const tempTexto = inputTexto.value;
+        inputTexto.value = outputTexto.value
+        outputTexto.value = tempTexto;
+
+        if (recognition) {
+            recognition.lang = selectOrigem.value === "pt" ? "pt-BR" : "en-US";
+        }
+
+        console.log("Idiomas invertidos!");
+    }
+
+    if (btnAlternar) {
+        btnAlternar.addEventListener("click", alternarIdiomas);
+    }
+
+    selectDestino.addEventListener("change", () => {
+        selectDestino.classList.add("animar-idioma");
 
         setTimeout(() => {
-            selectIdioma.classList.remove("animar-idioma");
+            selectDestino.classList.remove("animar-idioma");
         }, 400);
     });
 
 
-    let recognition = null;
-    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-    
-    // Inicializar reconhecimento de voz apenas se disponível
-    if (window.SpeechRecognition || window.webkitSpeechRecognition) {
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-        recognition = new SpeechRecognition()
-        recognition.lang = "pt-BR"
-        // iOS não suporta bem continuous = true
-        recognition.continuous = !isSafari
-        recognition.interimResults = false
-    }
+    btnCopiar = document.getElementById("btnCopiar");
+    btnCopiar.addEventListener("click", () => {
+        if (!outputTexto.value) return;
 
+        navigator.clipboard.writeText(outputTexto.value);
+    });
 
     btnGravar.addEventListener("click", () => {
         if (!recognition) {
@@ -56,12 +86,25 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
         if (!ouvindo) {
+            const langMapMic = {
+                "zh-CN": "zh-CN",
+                "en": "en-US",
+                "de": "de-DE",
+                "es": "es-ES",
+                "it": "it-IT",
+                "fr": "fr-FR",
+                "pt": "pt-BR"
+            };
+
+            const origemSelecionada = selectOrigem.value
+            recognition.lang = langMapMic[origemSelecionada] || origemSelecionada;
+
             ouvindo = true;
             btnGravar.textContent = "parar";
-            recognition.start(); //começa a ouvir
+            recognition.start();
         } else {
-            ouvindo = false;
-            recognition.stop(); //para de ouvir
+            ouvindo = false
+            recognition.stop();
             btnGravar.textContent = "ouvir";
         }
     });
@@ -93,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             btnGravar.textContent = "ouvir";
             ouvindo = false;
-            traduzir(); 
+            traduzir();
         }
     };
 
@@ -111,40 +154,30 @@ document.addEventListener("DOMContentLoaded", () => {
     async function traduzir(texto = null) {
         const textoParaTraduzir = texto || inputTexto.value.trim();
         if (!inputTexto.value.trim()) return;
-
-        const idiomaDestino = selectIdioma.value;
+        
+        const idiomaOrigem = selectOrigem.value;
+        const idiomaDestino = selectDestino.value;
 
         try {
-            let endereco = "https://api.mymemory.translated.net/get?q="
-                + encodeURIComponent(textoParaTraduzir)
-                + "&langpair=pt|" + idiomaDestino;
+            let endereco = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(textoParaTraduzir)}&langpair=${idiomaOrigem}|${idiomaDestino}`;
 
-            let resposta = await fetch(endereco, {
-                method: 'GET',
-                headers: {
-                    'Accept': 'application/json'
-                }
-            });
-            
-            if (!resposta.ok) {
-                throw new Error(`Erro HTTP: ${resposta.status}`);
-            }
-            
+            let resposta = await fetch(endereco);
+
+            if (!resposta.ok) throw new Error(`Erro HTTP: ${resposta.status}`);
+
             let dados = await resposta.json();
-
-            if (!dados.responseData || !dados.responseData.translatedText) {
-                throw new Error("Resposta inválida da API");
-            }
+            let traducaoFinal = dados.responseData.translatedText;
 
             escreverDevagar(dados.responseData.translatedText);
             ajustarAlturaTraducao();
-            falar(dados.responseData.translatedText, idiomaDestino);
+            falar(traducaoFinal, idiomaDestino);
 
         } catch (err) {
             console.error("Erro na tradução:", err);
             outputTexto.value = "Erro ao traduzir. Verifique sua conexão.";
         }
     }
+
     // --------- TEXT TO SPEECH ---------
     function falar(texto, idioma = "en") {
         const mapLang = {
@@ -154,11 +187,12 @@ document.addEventListener("DOMContentLoaded", () => {
             es: "es-ES",
             it: "it-IT",
             fr: "fr-FR",
+            pt: "pt-BR"
         };
 
-        speechSynthesis.cancel(); // Cancela qualquer fala em andamento
-
+        speechSynthesis.cancel(); // Cancela qualquer fala em anda5 mento
         const utterance = new SpeechSynthesisUtterance(texto);
+
         utterance.lang = mapLang[idioma] || "en-US";
         speechSynthesis.speak(utterance)
     }
