@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 "it": "it-IT",
                 "zh-CN": "zh-CN"
             };
-
             recognition.lang = mapLang[selectOrigem.value] || "pt-BR";
             recognition.start();
             ouvindo = true;
